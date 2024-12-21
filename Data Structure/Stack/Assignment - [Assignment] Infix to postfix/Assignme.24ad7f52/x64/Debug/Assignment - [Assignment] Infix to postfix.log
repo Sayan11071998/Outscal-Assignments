@@ -1,6 +1,0 @@
-﻿  Main.cpp
-D:\Git\Outscal-Assignments\Data Structure\Stack\Assignment - [Assignment] Infix to postfix\Main.cpp(68,27): warning C4305: 'return': truncation from 'int' to 'char'
-D:\Git\Outscal-Assignments\Data Structure\Stack\Assignment - [Assignment] Infix to postfix\Main.cpp(68,27): warning C4309: 'return': truncation of constant value
-D:\Git\Outscal-Assignments\Data Structure\Stack\Assignment - [Assignment] Infix to postfix\Main.cpp(90,10): warning C4305: 'return': truncation from 'int' to 'char'
-D:\Git\Outscal-Assignments\Data Structure\Stack\Assignment - [Assignment] Infix to postfix\Main.cpp(90,10): warning C4309: 'return': truncation of constant value
-  Assignment - [Assignment] Infix to postfix.vcxproj -> D:\Git\Outscal-Assignments\Data Structure\Stack\Assignment - [Assignment] Infix to postfix\x64\Debug\Assignment - [Assignment] Infix to postfix.exe
