@@ -78,10 +78,7 @@ public:
     }
 
     // Checking for Empty Stack
-    bool isEmpty()
-    {
-        return height == 0;
-    }
+    bool isEmpty() { return height == 0; }
 
     // Getting TOP value
     string topValue()
@@ -123,6 +120,8 @@ string prefixToInfix(string prefix)
     {
         char element = prefix[i];
 
+        if (element == ' ') continue;
+
         if (isOperand(element))
         {
             stack.push(string(1, element));
@@ -142,14 +141,18 @@ string prefixToInfix(string prefix)
 
 int main()
 {
-    string prefix1 = "* +AB -CD";
+    string prefix1 = "* + AB - CD";
     string prefix2 = "* -A /BC - /AKL";
+    string prefix3 = "*- A / B C - / A K L";
 
     cout << "Prefix Expression: " << prefix1 << endl;
     cout << "Infix Expression: " << prefixToInfix(prefix1) << endl;
 
     cout << "\nPrefix Expression: " << prefix2 << endl;
     cout << "Infix Expression: " << prefixToInfix(prefix2) << endl;
+
+    cout << "\nPrefix Expression: " << prefix3 << endl;
+    cout << "Infix Expression: " << prefixToInfix(prefix3) << endl;
 
     return 0;
 }
