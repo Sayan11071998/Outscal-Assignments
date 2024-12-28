@@ -1,223 +1,313 @@
 #include <iostream>
 using namespace std;
 
-struct Node {
+// Node structure
+class Node
+{
+public:
     int data;
     Node* next;
+    Node(int value) : data(value), next(nullptr) {}
 };
 
-class CircularLinkedList {
+// Circular Linked List class
+class CircularLinkedList
+{
 private:
-    Node* head;
+    Node* head_node;
 
 public:
-    CircularLinkedList() : head(nullptr) {}
+    CircularLinkedList() : head_node(nullptr) {}
 
-    void insertAtEnd(int value) {
-        Node* newNode = new Node{value, nullptr};
-        if (!head) {
-            head = newNode;
-            head->next = head;
-            return;
-        }
-
-        Node* temp = head;
-        while (temp->next != head) {
-            temp = temp->next;
-        }
-        temp->next = newNode;
-        newNode->next = head;
+    // Destructor to free memory
+    ~CircularLinkedList()
+    {
+        if (!head_node) return;
+        
+        Node* temp = head_node;
+        
+        do
+        {
+            Node* next = temp->next;
+            delete temp;
+            temp = next;
+        } while (temp != head_node);
     }
 
-    void insertAtBeginning(int value) {
-        Node* newNode = new Node{value, nullptr};
-        if (!head) {
-            head = newNode;
-            head->next = head;
-            return;
-        }
+    // Insert at the beginning
+    void insertAtBeginning(int value)
+    {
+        Node* new_node = new Node(value);
 
-        Node* temp = head;
-        while (temp->next != head) {
-            temp = temp->next;
+        if (!head_node)
+        {
+            head_node = new_node;
+            new_node->next = head_node;
         }
-        temp->next = newNode;
-        newNode->next = head;
-        head = newNode;
+        else
+        {
+            Node* temp = head_node;
+            while (temp->next != head_node) { temp = temp->next; }
+            new_node->next = head_node;
+            temp->next = new_node;
+            head_node = new_node;
+        }
     }
 
-    void deleteFromEnd() {
-        if (!head) {
-            cout << "List is empty!\n";
-            return;
-        }
+    // Insert at the end
+    void insertAtEnd(int value)
+    {
+        Node* new_node = new Node(value);
 
-        if (head->next == head) {
-            delete head;
-            head = nullptr;
-            return;
+        if (!head_node)
+        {
+            head_node = new_node;
+            new_node->next = head_node;
         }
-
-        Node* temp = head;
-        while (temp->next->next != head) {
-            temp = temp->next;
+        else
+        {
+            Node* temp = head_node;
+            while (temp->next != head_node) { temp = temp->next; }
+            temp->next = new_node;
+            new_node->next = head_node;
         }
-        delete temp->next;
-        temp->next = head;
     }
 
-    void deleteFromBeginning() {
-        if (!head) {
-            cout << "List is empty!\n";
-            return;
-        }
+    // Insert at a specified index
+    void insertAtIndex(int index, int value)
+    {
+        if (index < 0) return;
 
-        if (head->next == head) {
-            delete head;
-            head = nullptr;
-            return;
-        }
-
-        Node* temp = head;
-        while (temp->next != head) {
-            temp = temp->next;
-        }
-        Node* toDelete = head;
-        head = head->next;
-        temp->next = head;
-        delete toDelete;
-    }
-
-    void traverse() {
-        if (!head) {
-            cout << "List is empty!\n";
-            return;
-        }
-
-        Node* temp = head;
-        do {
-            cout << temp->data << " ";
-            temp = temp->next;
-        } while (temp != head);
-        cout << endl;
-    }
-
-    void findTheMiddle() {
-        if (!head) {
-            cout << "List is empty!\n";
-            return;
-        }
-
-        Node* slow = head;
-        Node* fast = head;
-        while (fast->next != head && fast->next->next != head) {
-            slow = slow->next;
-            fast = fast->next->next;
-        }
-        cout << "Middle node data: " << slow->data << endl;
-    }
-
-    void insertAtIndex(int index, int value) {
-        if (index < 0) {
-            cout << "Invalid index!\n";
-            return;
-        }
-
-        if (index == 0) {
+        if (index == 0)
+        {
             insertAtBeginning(value);
             return;
         }
 
-        Node* newNode = new Node{value, nullptr};
-        Node* temp = head;
-        for (int i = 0; i < index - 1; ++i) {
-            if (temp->next == head) {
-                cout << "Index out of bounds!\n";
-                delete newNode;
-                return;
-            }
+        Node* new_node = new Node(value);
+        Node* temp = head_node;
+
+        for (int i = 0; i < index - 1; ++i)
+        {
+            if (temp->next == head_node) return;
             temp = temp->next;
         }
-        newNode->next = temp->next;
-        temp->next = newNode;
+
+        new_node->next = temp->next;
+        temp->next = new_node;
     }
 
-    void deleteFromIndex(int index) {
-        if (index < 0 || !head) {
-            cout << "Invalid index or empty list!\n";
+    // Delete from the beginning
+    void deleteFromBeginning()
+    {
+        if (!head_node) return;
+
+        if (head_node->next == head_node)
+        {
+            delete head_node;
+            head_node = nullptr;
+        }
+        else
+        {
+            Node* temp = head_node;
+            Node* last = head_node;
+            while (last->next != head_node) { last = last->next; }
+            head_node = head_node->next;
+            last->next = head_node;
+            delete temp;
+        }
+    }
+
+    // Delete from the end
+    void deleteFromEnd()
+    {
+        if (!head_node)
+        {
+            cout << "List is empty. Nothing to delete." << endl;
             return;
         }
 
-        if (index == 0) {
+        if (head_node->next == head_node)
+        {
+            delete head_node;
+            head_node = nullptr;
+        }
+        else
+        {
+            Node* temp = head_node;
+
+            while (temp->next->next != head_node) { temp = temp->next; }
+
+            Node* last_node = temp->next;
+            temp->next = head_node;
+            delete last_node;
+        }
+    }
+
+    // Delete from a specified index
+    void deleteFromIndex(int index)
+    {
+        if (index < 0 || !head_node) return;
+
+        if (index == 0)
+        {
             deleteFromBeginning();
             return;
         }
 
-        Node* temp = head;
-        for (int i = 0; i < index - 1; ++i) {
-            if (temp->next == head) {
-                cout << "Index out of bounds!\n";
-                return;
-            }
+        Node* temp = head_node;
+        Node* prev = nullptr;
+
+        for (int i = 0; i < index; ++i)
+        {
+            prev = temp;
             temp = temp->next;
+            if (temp == head_node) return;
         }
 
-        Node* toDelete = temp->next;
-        if (toDelete == head) {
-            cout << "Index out of bounds!\n";
-            return;
-        }
-        temp->next = toDelete->next;
-        delete toDelete;
+        prev->next = temp->next;
+        delete temp;
     }
 
-    void reverse() {
-        if (!head || head->next == head) {
+    // Find the middle node
+    void findTheMiddle()
+    {
+        if (!head_node)
+        {
+            cout << "List is empty." << endl;
             return;
         }
 
-        Node* prev = nullptr;
-        Node* current = head;
-        Node* next = nullptr;
-        Node* tail = head;
+        Node* slow = head_node;
+        Node* fast = head_node;
 
-        do {
+        while (fast->next != head_node && fast->next->next != head_node)
+        {
+            slow = slow->next;
+            fast = fast->next->next;
+        }
+
+        cout << "Middle node: " << slow->data << endl;
+    }
+
+    // Traverse the list
+    void traverse()
+    {
+        if (!head_node)
+        {
+            cout << "List is empty." << endl;
+            return;
+        }
+
+        Node* temp = head_node;
+
+        do
+        {
+            cout << temp->data << " ";
+            temp = temp->next;
+        } while (temp != head_node);
+        
+        cout << endl;
+    }
+
+    // Reverse the circular linked list
+    void reverse()
+    {
+        if (!head_node || head_node->next == head_node) return;
+
+        Node* prev = nullptr, * current = head_node, * next = nullptr;
+        Node* last = head_node;
+        
+        do
+        {
             next = current->next;
             current->next = prev;
             prev = current;
             current = next;
-        } while (current != head);
+        } while (current != head_node);
 
-        tail->next = prev;
-        head = prev;
+        head_node->next = prev;
+        head_node = prev;
     }
 };
 
 int main() {
     CircularLinkedList cll;
 
+    cout << "== Circular Linked List Operations ==" << endl;
+
+    // Insert at the end
+    cout << "Inserting 10, 20, 30 at the end:" << endl;
     cll.insertAtEnd(10);
     cll.insertAtEnd(20);
     cll.insertAtEnd(30);
+    cout << "List: ";
     cll.traverse();
 
+    // Insert at the beginning
+    cout << "Inserting 5 at the beginning:" << endl;
     cll.insertAtBeginning(5);
+    cout << "List: ";
     cll.traverse();
 
+    // Delete from the end
+    cout << "Deleting from the end:" << endl;
+    cll.deleteFromEnd();
+    cout << "List: ";
+    cll.traverse();
+
+    // Delete from the beginning
+    cout << "Deleting from the beginning:" << endl;
+    cll.deleteFromBeginning();
+    cout << "List: ";
+    cll.traverse();
+
+    // Insert at a specific index
+    cout << "Inserting 15 at index 1:" << endl;
+    cll.insertAtIndex(1, 15);
+    cout << "List: ";
+    cll.traverse();
+
+    // Delete from a specific index
+    cout << "Deleting from index 1:" << endl;
+    cll.deleteFromIndex(1);
+    cout << "List: ";
+    cll.traverse();
+
+    // Find the middle element
+    cout << "Finding the middle of the list:" << endl;
+    cll.insertAtEnd(40);
+    cll.insertAtEnd(50);
+    cll.insertAtEnd(60);
+    cout << "List: ";
+    cll.traverse();
     cll.findTheMiddle();
 
-    cll.insertAtIndex(2, 15);
-    cll.traverse();
-
-    cll.deleteFromIndex(3);
-    cll.traverse();
-
+    // Reverse the list
+    cout << "Reversing the list:" << endl;
     cll.reverse();
+    cout << "List after reversing: ";
     cll.traverse();
 
+    // Demonstrating with empty list
+    cout << "Clearing the list completely:" << endl;
     cll.deleteFromBeginning();
-    cll.deleteFromEnd();
+    cll.deleteFromBeginning();
+    cll.deleteFromBeginning();
+    cll.deleteFromBeginning();
+    cout << "List after clearing: ";
     cll.traverse();
+
+    // Reusing the list
+    cout << "Adding new elements to the cleared list:" << endl;
+    cll.insertAtBeginning(100);
+    cll.insertAtEnd(200);
+    cll.insertAtEnd(300);
+    cout << "List: ";
+    cll.traverse();
+    cll.findTheMiddle();
+
+    cout << "== End of Operations ==" << endl;
 
     return 0;
 }
